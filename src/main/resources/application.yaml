@@ -1,11 +1,29 @@
 server:
   port: 9090
+
 spring:
+  output:
+    ansi:
+      enabled: always
   application:
-    name: eureka-server
+    name: discovery-service
+  profiles:
+    active: dev
+
 eureka:
   client:
     register-with-eureka: false
     fetch-registry: false
-  server:
-    enable-self-preservation: false
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+
+# Actuator healthcheck
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "prometheus,health,info"
+  prometheus:
+    metrics:
+      export:
+        enabled: true
